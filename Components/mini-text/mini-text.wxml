@@ -1,0 +1,24 @@
+<!--Components/mini-text/mini-text.wxml-->
+
+<view class="mt-container" style="font-size: {{fontSize}}; line-height: {{lineHeight}}">
+  <block wx:for="{{textList}}" wx:key="miniID">
+
+    <!-- 链接 -->
+    <view wx:if="{{item.textType === 'URL' || item.textType === 'EMAIL'}}" 
+      class="text-link"
+      style="color: {{tapColor}}"
+    >
+      <text selectable catchtap="onTapLink" data-text-type="{{item.textType}}" data-idx="{{index}}" data-content="{{item.content}}">{{item.content}}</text>
+    </view>
+
+    <!-- tag -->
+    <text wx:elif="{{item.textType === 'HASHTAG' || item.textType === 'AT'}}" style="color: {{tapColor}}" selectable catchtap="onTapTag" data-text-type="{{item.textType}}" data-idx="{{index}}" data-content="{{item.content}}">{{item.content}}</text>
+
+    <!-- 电话 -->
+    <text wx:elif="{{item.textType === 'PHONE'}}" style="color: {{tapColor}}" selectable catchtap="onTapPhone" data-idx="{{index}}" data-content="{{item.content}}">{{item.content}}</text>
+
+    <!-- 常规 -->
+    <text wx:else style="color: {{fontColor}}" selectable>{{item.content}}</text>
+   
+  </block>
+</view>

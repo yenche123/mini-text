@@ -1,0 +1,13 @@
+
+page {
+  background: #f1f1f1;
+}
+
+.container {
+  width: 650rpx;
+  margin: 50rpx;
+  padding: 50rpx;
+  box-sizing: border-box;
+  position: relative;
+  background: white;
+}

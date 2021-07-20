@@ -1,0 +1,15 @@
+/* Components/mini-text/mini-text.wxss */
+
+.mt-container {
+  width: 100%;
+  position: relative;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.text-link {
+  display: inline-block;
+  max-width: 100%;
+  word-break: break-all;
+}

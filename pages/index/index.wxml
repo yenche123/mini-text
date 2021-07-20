@@ -1,0 +1,4 @@
+
+<view class="container">
+  <mini-text text-list="{{contentList}}" bind:tapminitext="onTapFromMiniText" />
+</view>
