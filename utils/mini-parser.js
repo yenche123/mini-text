@@ -45,7 +45,7 @@ class MiniParser {
   }
 
   static _parseHashtag(resultList) {
-    let reg = /#[^\s\\/#][^\s\\/]+/g
+    let reg = /#[^\s\\/#-()（）\.,，。！!、%@~+?&*][^\s\\/()（）\.,。！!、%@*]+/g
     resultList = this._innerParse(resultList, "HASHTAG", reg, {minLength: 2})
     return resultList
   }
@@ -70,11 +70,17 @@ class MiniParser {
       for(let match of matches) {
 
         let mTxt = match[0]
-        if(mTxt.length < minLength) continue
+        let mLen = mTxt.length
+        if(mLen < minLength) continue
+        if(textType === "AT" && mLen > 20) continue
+        if(textType === "HASHTAG" && mLen > 56) continue
+        if(textType === "URL") {
+          if(!this._checkUrlMore(mTxt)) continue
+        }
 
         let startIdx = match.index
-        let endIdx = match.index + mTxt.length
-        let obj = {textType, content: mTxt, miniID: this.getRandomId()}
+        let endIdx = match.index + mLen
+        let obj = {textType, content: mTxt, miniID: this._getRandomId()}
 
         if(startIdx > 0) {
           //如果前面有字符串
@@ -87,7 +93,7 @@ class MiniParser {
           let frontObj = {
             textType: "PLAIN_TEXT",
             content: v1Text.substring(tmpEndIdx, startIdx),
-            miniID: this.getRandomId(),
+            miniID: this._getRandomId(),
           }
           tmpList.push(frontObj, obj)
         }
@@ -103,7 +109,7 @@ class MiniParser {
         let behindObj = {
           textType: "PLAIN_TEXT",
           content: v1Text.substring(tmpEndIdx),
-          miniID: this.getRandomId()
+          miniID: this._getRandomId()
         }
         tmpList.push(behindObj)
       }
@@ -119,10 +125,15 @@ class MiniParser {
     return resultList
   }
 
+  // 加强检测 url
+  static _checkUrlMore(text) {
+    let reg1 = /^[\d\.-]{2,}$/   // 避免字符串里 全是: 数字 . - 的情况
+    if(reg1.test(text)) return false
+    return true
+  }
 
-  static getRandomId() {
+  static _getRandomId() {
     const ABC = "abcdefghijklmnopqrstuvwxyz0123456789"
-    let now = Date.now()
 
     let sss = "miniID_"
     for(let i=0; i<9; i++) {
