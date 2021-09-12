@@ -45,7 +45,7 @@ class MiniParser {
   }
 
   static _parseHashtag(resultList) {
-    let reg = /#[^\s\\/#-()（）\.,，。！!、%@~+?&*][^\s\\/()（）\.,。！!、%@*]+/g
+    let reg = /#[^\s\\/#-()（）\.,，。！!、%@~+?&*‘’：:'"][^\s\\/()（）\.,。！!、%@*‘’：:'"]+/g
     resultList = this._innerParse(resultList, "HASHTAG", reg, {minLength: 2})
     return resultList
   }
