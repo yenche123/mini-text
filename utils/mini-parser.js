@@ -19,6 +19,7 @@ class MiniParser {
 
     let resultList = [{textType: "PLAIN_TEXT", content: myTxt}]
     resultList = this._parseEmail(resultList)
+    resultList = this._parseShortLink(resultList)
     resultList = this._parseUrl(resultList)
     resultList = this._parseAt(resultList)      //如果不想高亮@，请把本行注释掉
     resultList = this._parseHashtag(resultList) //如果不想高亮#，请把本行注释掉
@@ -32,8 +33,14 @@ class MiniParser {
     return resultList
   }
 
+  static _parseShortLink(resultList) {
+    let reg = /#小程序:\/\/[^\s\/]{2,20}\/\S{10,60}/g
+    resultList = this._innerParse(resultList, "SHORTLINK", reg, {minLength: 20})
+    return resultList
+  }
+
   static _parseUrl(resultList) {
-    let reg = /[\w\./:-]*\w{2,32}\.\w{2,6}\S*/g
+    let reg = /[\w\./:-]*\w{1,32}\.\w{2,6}\S*/g
     resultList = this._innerParse(resultList, "URL", reg, {minLength: 8})
     return resultList
   }
@@ -80,7 +87,7 @@ class MiniParser {
 
         let startIdx = match.index
         let endIdx = match.index + mLen
-        let obj = {textType, content: mTxt, miniID: this._getRandomId()}
+        let obj = { textType, content: mTxt, miniID: this._getRandomId() }
 
         if(startIdx > 0) {
           //如果前面有字符串
@@ -126,10 +133,44 @@ class MiniParser {
   }
 
   // 加强检测 url
-  static _checkUrlMore(text) {
+  static _checkUrlMore(text = "") {
     let reg1 = /^[\d\.-]{2,}$/   // 避免字符串里 全是: 数字 . - 的情况
     if(reg1.test(text)) return false
+    let enNum = this._howManyLowerCase(text)
+    if(enNum < 3) return false
+
+    if(text.indexOf("http") === 0) return true
+    
+    let chineseNum = this._getChineseCharNum(text)
+    if(chineseNum > 2 && !text.includes("/")) {
+      return false
+    }
+
     return true
+  }
+
+  /**
+   * 获取文本的中文字符数
+   * @param {String} val 
+   * @returns {Number}
+   */
+  static _getChineseCharNum(val) {
+    if(!val) return 0
+    let num = 0
+    for(let i=0; i<val.length; i++) {
+      if(val.charCodeAt(i) >= 10000) num++
+    }
+    return num
+  }
+
+  static _howManyLowerCase(text) {
+    if(!text || text.length < 1) return 0
+    let list = text.split("")
+    let num = 0
+    list.forEach(v => {
+      if(v >= "a" && v <= "z") num++
+    })
+    return num
   }
 
   static _getRandomId() {

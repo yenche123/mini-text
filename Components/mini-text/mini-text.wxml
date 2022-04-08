@@ -4,7 +4,8 @@
   <block wx:for="{{textList}}" wx:key="miniID">
 
     <!-- 链接 -->
-    <view wx:if="{{item.textType === 'URL' || item.textType === 'EMAIL'}}" 
+    <view 
+      wx:if="{{item.textType === 'URL' || item.textType === 'EMAIL' || item.textType === 'SHORTLINK'}}" 
       class="text-link"
       style="color: {{tapColor}}"
     >

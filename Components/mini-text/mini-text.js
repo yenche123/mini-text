@@ -27,9 +27,7 @@ Component({
 
   },
 
-  data: {
-
-  },
+  data: {},
 
   methods: {
     onTapLink(e) {
@@ -37,6 +35,11 @@ Component({
       let {textType, content, idx} = e.currentTarget.dataset
       let send = { textType, content, idx }
       this.triggerEvent("tapminitext", send)
+
+      if(textType === "SHORTLINK") {
+        this.tapShortLink(content)
+        return
+      }
 
       wx.showActionSheet({
         alertText: content,
@@ -46,6 +49,21 @@ Component({
           if(i === 0) _this.copy(content)
         },
       })
+    },
+
+    tapShortLink(content) {
+      const d1 = Date.now()
+      try {
+        wx.navigateToMiniProgram({
+          shortLink: content,
+          fail(err) {
+            const d2 = Date.now()
+            const diff = d2 - d1
+            if(diff < 900) wx.showToast({title: "跳转失败", icon: "none"})
+          }
+        })
+      }
+      catch(err) {}
     },
 
     copy(content) {

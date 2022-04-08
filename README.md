@@ -5,8 +5,6 @@
 <br>
 
 ## 安装
-两种方式
-- 直接点击代码片段 [https://developers.weixin.qq.com/s/NNBT2Wms7trV](https://developers.weixin.qq.com/s/NNBT2Wms7trV)
 - 运行命令 `git clone https://github.com/yenche123/mini-text.git`
 
 <br>
@@ -63,7 +61,3 @@ Page({
 
 ## LICENSE
 MIT
-
-
-
-
